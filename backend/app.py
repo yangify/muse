@@ -6,8 +6,10 @@ This module provides a Flask application with two endpoints:
 
 from flask import Flask, request, jsonify
 from service import transcriber
+from repository import db, ts_repo
 
 app = Flask(__name__)
+db.init()
 
 
 @app.route('/health', methods=['GET'])
@@ -45,6 +47,12 @@ def transcribe():
     except Exception as e:
         print(e)
         return jsonify({"error": "Error reading the audio file"}), 400
+
+    try:
+        ts_repo.save(file.filename, transcription)
+    except Exception as e:
+        print(e)
+        return jsonify({"error": "Error saving the transcription"}), 400
 
     return jsonify({"transcription": transcription}), 200
 

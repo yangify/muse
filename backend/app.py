@@ -62,7 +62,7 @@ def get_transcriptions():
         and the associated HTTP status code.
     """
     transcriptions = ts_repo.get_all()
-    return jsonify(transcriptions), 200
+    return jsonify({"transcriptions": transcriptions}), 200
 
 
 @app.route('/search', methods=['GET'])
@@ -90,7 +90,7 @@ def search_transcriptions():
     if not results:
         return jsonify({"error": "No transcriptions found matching the filename"}), 404
 
-    return jsonify(results), 200
+    return jsonify({"transcriptions": results}), 200
 
 
 if __name__ == '__main__':

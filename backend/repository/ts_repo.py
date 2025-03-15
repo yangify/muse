@@ -53,8 +53,8 @@ def save_all(transcriptions):
     Returns:
         None
     """
-    for filename, transcription in transcriptions:
-        save(filename, transcription)
+    for transcription in transcriptions:
+        save(transcription['filename'], transcription['transcription'])
 
 
 def get_all():

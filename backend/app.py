@@ -1,3 +1,9 @@
+"""
+This module provides a Flask application with two endpoints:
+- A health check endpoint to verify the application's status.
+- A transcribe endpoint that processes an uploaded MP3 file and returns its transcription.
+"""
+
 from flask import Flask, request, jsonify
 from service import transcriber
 
@@ -6,11 +12,28 @@ app = Flask(__name__)
 
 @app.route('/health', methods=['GET'])
 def health_check():
+    """
+    Perform a health check.
+
+    Returns:
+        Tuple[Response, int]: A JSON response containing the application status
+        and the HTTP status code.
+    """
     return jsonify({"status": "healthy"}), 200
 
 
 @app.route('/transcribe', methods=['POST'])
 def transcribe():
+    """
+    Transcribe an uploaded MP3 file.
+
+    The function expects a file named 'file' (must be .mp3). It handles any transcription
+    exceptions and returns the result or error in JSON format.
+
+    Returns:
+        Tuple[Response, int]: A JSON response containing either the transcription
+        or an error message along with the HTTP status code.
+    """
     file = request.files['file']
     if not file:
         return jsonify({"error": "No file part"}), 400

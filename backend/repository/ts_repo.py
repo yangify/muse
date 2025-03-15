@@ -1,17 +1,27 @@
 """
-This module provides a function for interacting with the transcriptions table
+This module provides functions for inserting and retrieving transcription
+records in an SQLite database. The main functionalities include:
+
+    - Saving a single transcription
+    - Bulk saving multiple transcriptions
+    - Retrieving all transcriptions
+    - Searching transcriptions by partial filename
 """
+
 
 import sqlite3
 
 
 def save(filename, transcription):
     """
-    Insert a given transcription into the 'transcriptions' table of an SQLite database.
+    Insert a transcription record into the 'transcriptions' table of an SQLite database.
 
     Args:
         filename (str): The name of the file associated with the transcription.
         transcription (str): The text content of the transcription.
+
+    Example:
+        save("audio_001.mp3", "Transcribed text goes here...")
 
     Returns:
         None
@@ -25,6 +35,26 @@ def save(filename, transcription):
         ) VALUES (?, ?)''', (filename, transcription))
     conn.commit()
     conn.close()
+
+
+def save_all(transcriptions):
+    """
+    Insert multiple transcription records into the 'transcriptions' table.
+
+    Args:
+        transcriptions (List[Tuple[str, str]]): A list of (filename, transcription) tuples.
+
+    Example:
+        save_all([
+            ("audio_001.mp3", "First transcription text..."),
+            ("audio_002.mp3", "Second transcription text...")
+        ])
+
+    Returns:
+        None
+    """
+    for filename, transcription in transcriptions:
+        save(filename, transcription)
 
 
 def get_all():

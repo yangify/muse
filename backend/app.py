@@ -1,9 +1,12 @@
 """
-This module provides a Flask application with three endpoints:
-- A health check endpoint to verify the application's status.
-- A transcribe endpoint that processes an uploaded MP3 file and returns its transcription.
-- A transcriptions endpoint to retrieve all stored transcriptions from the database.
+This module provides a Flask application with four endpoints:
+
+1. A health check endpoint (/health) to verify the application's status.
+2. A transcribe endpoint (/transcribe) that processes one or more uploaded MP3 files and returns their transcriptions.
+3. A transcriptions endpoint (/transcriptions) to retrieve all stored transcriptions from the database.
+4. A search endpoint (/search) that performs a full-text search on transcriptions based on the audio file name.
 """
+
 
 from flask import Flask, request, jsonify
 from service import transcriber
@@ -26,36 +29,27 @@ def health_check():
 
 
 @app.route('/transcribe', methods=['POST'])
-def transcribe():
+def transcribe_files():
     """
-    Transcribe an uploaded MP3 file.
+    Transcribe one or more uploaded MP3 files.
 
-    The function expects a file named 'file' (must be .mp3). It handles any transcription
-    exceptions and returns the result or error in JSON format.
+    The endpoint expects multipart/form-data with files under the "files" field.
+    On success, it returns a JSON response containing a "transcriptions" key with
+    the results. In case of errors, a JSON response with an "error" key is returned.
 
     Returns:
-        Tuple[Response, int]: A JSON response containing either the transcription
-        or an error message along with the HTTP status code.
+        Tuple[Response, int]: A JSON response with either the transcriptions or an
+        error message, along with the HTTP status code.
     """
-    file = request.files['file']
-    if not file:
-        return jsonify({"error": "No file part"}), 400
-    if not file.filename.endswith(".mp3"):
-        return jsonify({"error": "Invalid file format. Please upload an MP3 file."}), 400
-
+    files = request.files.getlist('files')
     try:
-        transcription = transcriber.transcribe(file)
+        transcriptions = transcriber.transcribe_files(files)
+        ts_repo.save_all(transcriptions)
     except Exception as e:
         print(e)
-        return jsonify({"error": "Error reading the audio file"}), 400
+        return jsonify({"error": "Error transcribing files"}), 500
 
-    try:
-        ts_repo.save(file.filename, transcription)
-    except Exception as e:
-        print(e)
-        return jsonify({"error": "Error saving the transcription"}), 400
-
-    return jsonify({"transcription": transcription}), 200
+    return jsonify({"transcriptions": transcriptions}), 200
 
 
 @app.route('/transcriptions', methods=['GET'])

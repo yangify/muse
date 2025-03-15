@@ -33,6 +33,8 @@ def transcribe_files():
     """
     Transcribe one or more uploaded MP3 files.
 
+    Assumption: There can be multiple files uploaded with the same name.
+
     The endpoint expects multipart/form-data with files under the "files" field.
     On success, it returns a JSON response containing a "transcriptions" key with
     the results. In case of errors, a JSON response with an "error" key is returned.

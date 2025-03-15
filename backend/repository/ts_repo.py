@@ -8,7 +8,6 @@ records in an SQLite database. The main functionalities include:
     - Searching transcriptions by partial filename
 """
 
-
 import sqlite3
 
 
@@ -67,10 +66,10 @@ def get_all():
     """
     conn = sqlite3.connect('transcriptions.db')
     cur = conn.cursor()
-    cur.execute('SELECT filename, transcription FROM transcriptions')
+    cur.execute('SELECT * FROM transcriptions')
     rows = cur.fetchall()
     conn.close()
-    return [{"filename": filename, "transcription": transcription} for filename, transcription in rows]
+    return unpack_transcription_rows(rows)
 
 
 def search_by_filename(filename):
@@ -87,9 +86,13 @@ def search_by_filename(filename):
     conn = sqlite3.connect('transcriptions.db')
     cur = conn.cursor()
     cur.execute('''
-        SELECT filename, transcription
-        FROM transcriptions
+        SELECT * FROM transcriptions
         WHERE filename LIKE ?''', ('%' + filename + '%',))
     rows = cur.fetchall()
     conn.close()
-    return [{"filename": filename, "transcription": transcription} for filename, transcription in rows]
+    return unpack_transcription_rows(rows)
+
+
+def unpack_transcription_rows(rows):
+    return [{"id": id, "filename": filename, "transcription": transcription, "createdTimestamp": created_at} for
+            id, filename, transcription, created_at in rows]

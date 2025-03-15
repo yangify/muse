@@ -1,7 +1,8 @@
 """
-This module provides a Flask application with two endpoints:
+This module provides a Flask application with three endpoints:
 - A health check endpoint to verify the application's status.
 - A transcribe endpoint that processes an uploaded MP3 file and returns its transcription.
+- A transcriptions endpoint to retrieve all stored transcriptions from the database.
 """
 
 from flask import Flask, request, jsonify
@@ -55,6 +56,19 @@ def transcribe():
         return jsonify({"error": "Error saving the transcription"}), 400
 
     return jsonify({"transcription": transcription}), 200
+
+
+@app.route('/transcriptions', methods=['GET'])
+def get_transcriptions():
+    """
+    Retrieve all stored transcriptions.
+
+    Returns:
+        Tuple[Response, int]: A JSON response containing all transcriptions
+        and the associated HTTP status code.
+    """
+    transcriptions = ts_repo.get_all()
+    return jsonify(transcriptions), 200
 
 
 if __name__ == '__main__':

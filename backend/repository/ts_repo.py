@@ -25,3 +25,19 @@ def save(filename, transcription):
         ) VALUES (?, ?)''', (filename, transcription))
     conn.commit()
     conn.close()
+
+
+def get_all():
+    """
+    Retrieve all transcriptions from the 'transcriptions' table in the SQLite database.
+
+    Returns:
+        List[Dict[str, str]]: A list of dictionaries where each dictionary represents
+        a transcription record with 'filename' and 'transcription' keys.
+    """
+    conn = sqlite3.connect('transcriptions.db')
+    cur = conn.cursor()
+    cur.execute('SELECT filename, transcription FROM transcriptions')
+    rows = cur.fetchall()
+    conn.close()
+    return [{"filename": filename, "transcription": transcription} for filename, transcription in rows]

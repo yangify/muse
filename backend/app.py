@@ -71,5 +71,33 @@ def get_transcriptions():
     return jsonify(transcriptions), 200
 
 
+@app.route('/search', methods=['GET'])
+def search_transcriptions():
+    """
+    Perform a full-text search on transcriptions based on the audio file name.
+
+    Query Parameter:
+        filename (str): The name (or part of the name) of the audio file to search for.
+
+    Returns:
+        Tuple[Response, int]: A JSON response containing the matching transcriptions
+        or an error message along with the HTTP status code.
+    """
+    filename = request.args.get('filename', '').strip()
+    if not filename:
+        return jsonify({"error": "Filename query parameter is missing"}), 400
+
+    try:
+        results = ts_repo.search_by_filename(filename)
+    except Exception as e:
+        print(e)
+        return jsonify({"error": "Error searching transcriptions"}), 500
+
+    if not results:
+        return jsonify({"error": "No transcriptions found matching the filename"}), 404
+
+    return jsonify(results), 200
+
+
 if __name__ == '__main__':
     app.run(debug=True)

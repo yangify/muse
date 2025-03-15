@@ -41,3 +41,25 @@ def get_all():
     rows = cur.fetchall()
     conn.close()
     return [{"filename": filename, "transcription": transcription} for filename, transcription in rows]
+
+
+def search_by_filename(filename):
+    """
+    Perform a partial match search on the 'transcriptions' table based on the filename.
+
+    Args:
+        filename (str): The partial filename to search for.
+
+    Returns:
+        List[Dict[str, str]]: A list of dictionaries where each dictionary represents
+        a transcription record that matches the filename.
+    """
+    conn = sqlite3.connect('transcriptions.db')
+    cur = conn.cursor()
+    cur.execute('''
+        SELECT filename, transcription
+        FROM transcriptions
+        WHERE filename LIKE ?''', ('%' + filename + '%',))
+    rows = cur.fetchall()
+    conn.close()
+    return [{"filename": filename, "transcription": transcription} for filename, transcription in rows]

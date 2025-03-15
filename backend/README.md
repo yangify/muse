@@ -1,18 +1,15 @@
-Setup
-1. Activate python virtual environment
+Setup - Activate python virtual environment
 
-    ` python -m venv .venv `
+   ` python -m venv .venv `
 
-    ` source .venv/bin/activate `
+   ` source .venv/bin/activate `
 
-2. Install dependency
+Setup - Install dependencies: ` pip install -r requirements.txt `
 
-    ` pip install -r requirements.txt `
+Start dev server: ` Flask run`
 
-How to start dev server
+Run test: ` pytest `
 
-   ` Flask run`
+Dockerize: ` docker build -t muse-backend . `
 
-How to run test
-
-   ` pytest `
+Run Container: ` docker run -d -p 8000:8000 --name muse-backend muse-backend `

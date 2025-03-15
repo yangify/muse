@@ -1,35 +1,59 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
+import {useState} from 'react'
 import './App.css'
 
 function App() {
-  const [count, setCount] = useState(0)
+    const [files, setFiles] = useState([]);
+    const [transcriptions, setTranscriptions] = useState({});
 
-  return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    // Handle file selection
+    const handleFileUpload = (e) => {
+        const selectedFiles = Array.from(e.target.files);
+        setFiles((prevFiles) => [...prevFiles, ...selectedFiles]);
+    };
+
+    const transcribeFiles = () => {
+        const mockTranscriptions = {};
+        files.forEach((file, index) => {
+            mockTranscriptions[file.name] = `This is a mock transcription for "${file.name}"`;
+        });
+        setTranscriptions(mockTranscriptions);
+    };
+
+
+    return (
+        <>
+            <h1>Audio File Transcription</h1>
+            <div className="upload-section">
+                <input
+                    type="file"
+                    accept="audio/*"
+                    multiple
+                    onChange={handleFileUpload}
+                />
+                <h2>Uploaded Files</h2>
+                <ul>
+                    {files.map((file, index) => (
+                        <li key={index}>{file.name}</li>
+                    ))}
+                </ul>
+            </div>
+
+            <h2>Uploaded Files and Transcriptions</h2>
+            <ul>
+                {files.map((file, index) => (
+                    <li key={index}>
+                        <strong>File:</strong> {file.name}
+                        <br />
+                        <strong>Transcription:</strong>{' '}
+                        {transcriptions[file.name]
+                            ? transcriptions[file.name]
+                            : 'No transcription available yet.'}
+                    </li>
+                ))}
+            </ul>
+
+        </>
+    )
 }
 
 export default App

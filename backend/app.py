@@ -1,7 +1,5 @@
-import os
-import tempfile
-from service import transcriber
 from flask import Flask, request, jsonify
+from service import transcriber
 
 app = Flask(__name__)
 
@@ -19,13 +17,8 @@ def transcribe():
     if not file.filename.endswith(".mp3"):
         return jsonify({"error": "Invalid file format. Please upload an MP3 file."}), 400
 
-    filename = file.filename
-    temp_dir = tempfile.TemporaryDirectory()
-    temp_file_path = os.path.join(temp_dir.name, filename)
-    file.save(temp_file_path)
-
     try:
-        transcription = transcriber.transcribe(temp_file_path)
+        transcription = transcriber.transcribe(file)
     except Exception as e:
         print(e)
         return jsonify({"error": "Error reading the audio file"}), 400

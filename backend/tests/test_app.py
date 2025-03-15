@@ -26,7 +26,7 @@ def test_transcriptions_empty(client, mocker):
 
     # Then
     assert response.status_code == 200
-    assert response.json == []
+    assert response.json == {'transcriptions': []}
 
 
 def test_search_no_query(client):

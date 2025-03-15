@@ -6,17 +6,17 @@ This module provides a Flask application with four endpoints:
 3. A transcriptions endpoint (/transcriptions) to retrieve all stored transcriptions from the database.
 4. A search endpoint (/search) that performs a full-text search on transcriptions based on the audio file name.
 """
-
-
-from flask import Flask, request, jsonify
+from flask import Flask, Blueprint, request, jsonify
+from flask_cors import CORS
 from service import transcriber
 from repository import db, ts_repo
 
-app = Flask(__name__)
+api_bp = Blueprint('api_bp', __name__)
+CORS(api_bp, resources={r"/*": {"origins": "http://localhost:5173"}})
 db.init()
 
 
-@app.route('/health', methods=['GET'])
+@api_bp.route('/health', methods=['GET'])
 def health_check():
     """
     Perform a health check.
@@ -28,7 +28,7 @@ def health_check():
     return jsonify({"status": "healthy"}), 200
 
 
-@app.route('/transcribe', methods=['POST'])
+@api_bp.route('/transcribe', methods=['POST'])
 def transcribe_files():
     """
     Transcribe one or more uploaded MP3 files.
@@ -54,7 +54,7 @@ def transcribe_files():
     return jsonify({"transcriptions": transcriptions}), 200
 
 
-@app.route('/transcriptions', methods=['GET'])
+@api_bp.route('/transcriptions', methods=['GET'])
 def get_transcriptions():
     """
     Retrieve all stored transcriptions.
@@ -67,7 +67,7 @@ def get_transcriptions():
     return jsonify({"transcriptions": transcriptions}), 200
 
 
-@app.route('/search', methods=['GET'])
+@api_bp.route('/search', methods=['GET'])
 def search_transcriptions():
     """
     Perform a full-text search on transcriptions based on the audio file name.
@@ -95,5 +95,13 @@ def search_transcriptions():
     return jsonify({"transcriptions": results}), 200
 
 
+def create_app():
+    app = Flask(__name__)
+    # Register the blueprint with /api as the prefix
+    app.register_blueprint(api_bp, url_prefix='/api')
+    return app
+
+
 if __name__ == '__main__':
-    app.run(debug=True)
+    app = create_app()
+    app.run()

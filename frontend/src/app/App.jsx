@@ -1,6 +1,7 @@
 import {useState} from 'react'
 import './App.css'
 import {TranscribePage} from "../transcibe/TranscribePage.jsx";
+import {AllTranscriptionsPage} from "../transcriptions/AllTranscriptionsPage.jsx";
 
 function App() {
     const [currentPage, setCurrentPage] = useState("transcribe");
@@ -14,6 +15,7 @@ function App() {
         </div>
         <div>
             {currentPage === 'transcribe' && <TranscribePage />}
+            {currentPage === "all" && <AllTranscriptionsPage />}
         </div>
     </>)
 }

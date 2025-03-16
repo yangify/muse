@@ -68,12 +68,11 @@ export function TranscribePage() {
                     <div>
                         {files.map((file, index) => (
                             <div key={index}>
+                                <hr/>
                                 <strong>File:</strong> {file.name}
                                 <br/>
                                 <strong>Transcription:</strong>{' '}
                                 {transcriptions[file.name] ? transcriptions[file.name] : 'Processing...'}
-                                <br/>
-                                <br/>
                             </div>
                         ))}
                     </div>

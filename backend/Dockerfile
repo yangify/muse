@@ -7,11 +7,11 @@ COPY requirements.txt .
 # Install required packages
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy the rest of your application code
+# Copy the rest of the application code
 COPY . .
 
 # Expose the port Gunicorn will run on
 EXPOSE 8000
 
-# Start Gunicorn to serve your Flask app
+# Start Gunicorn to serve Flask app
 CMD ["gunicorn", "--bind", "0.0.0.0:8000", "app:app"]

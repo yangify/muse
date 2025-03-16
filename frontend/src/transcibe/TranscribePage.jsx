@@ -1,4 +1,5 @@
 import {useRef, useState} from 'react';
+import {TranscriptionList} from "./TranscriptionList.jsx";
 
 export function TranscribePage() {
     const [files, setFiles] = useState([]);
@@ -13,7 +14,7 @@ export function TranscribePage() {
         setTranscriptions({}); // Clear existing transcriptions
 
         // Post files to the /transcribe endpoint
-        postFileToTranscribe(selectedFiles);
+        transcribe(selectedFiles);
 
         // Clear the input field to refresh it
         if (fileInputRef.current) {
@@ -21,34 +22,30 @@ export function TranscribePage() {
         }
     };
 
-    const postFileToTranscribe = (files) => {
+    const transcribe = async (files) => {
         const formData = new FormData();
         files.map((file) => formData.append('files', file));
 
-        fetch('http://127.0.0.1:5000/transcribe', {
+        const response = await fetch('http://127.0.0.1:5000/transcribe', {
             method: 'POST',
             body: formData,
-        })
-            .then((response) => {
-                if (!response.ok) {
-                    throw new Error('Failed to transcribe files');
-                }
-                return response.json();
-            })
-            .then((body) => {
-                // Update transcriptions
-                const updatedTranscriptions = {};
-                files.forEach((file, index) => {
-                    updatedTranscriptions[file.name] =
-                        body.transcriptions[index]?.transcription || 'No transcription available';
-                });
-                setTranscriptions(updatedTranscriptions);
-            })
-            .catch(() => {
-                alert('There was an error uploading files or processing transcriptions.');
-                setFiles([]);
-                setTranscriptions({});
-            });
+        });
+
+        if (!response.ok) {
+            console.error('Error during transcription:', error);
+            alert('An error occurred while uploading files or processing transcriptions. Please try again.');
+            setFiles([]);
+            setTranscriptions({});
+            return;
+        }
+
+        const body = await response.json();
+        const updatedTranscriptions = files.reduce((acc, file, index) => {
+            acc[file.name] = body.transcriptions[index]?.transcription || 'No transcription available';
+            return acc;
+        }, {});
+
+        setTranscriptions(updatedTranscriptions);
     };
 
     return (
@@ -62,22 +59,9 @@ export function TranscribePage() {
                 onChange={handleFileUpload}
             />
 
-            {files.length > 0 && (
-                <div>
-                    <h2>Uploaded Files and Transcriptions</h2>
-                    <div>
-                        {files.map((file, index) => (
-                            <div key={index}>
-                                <hr/>
-                                <strong>File:</strong> {file.name}
-                                <br/>
-                                <strong>Transcription:</strong>{' '}
-                                {transcriptions[file.name] ? transcriptions[file.name] : 'Processing...'}
-                            </div>
-                        ))}
-                    </div>
-                </div>
-            )}
+            {files.length > 0 &&
+                <TranscriptionList files={files} transcriptions={transcriptions}/>
+            }
         </div>
     );
 }

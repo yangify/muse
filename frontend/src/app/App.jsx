@@ -8,7 +8,6 @@ function App() {
     const [currentPage, setCurrentPage] = useState("transcribe");
 
     return (<>
-        {/* Navigation Buttons */}
         <div>
             <button onClick={() => setCurrentPage("transcribe")}>Transcribe</button>
             <button onClick={() => setCurrentPage("all")}>All Transcriptions</button>

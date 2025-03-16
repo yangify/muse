@@ -2,6 +2,7 @@ import {useState} from 'react'
 import './App.css'
 import {TranscribePage} from "../transcibe/TranscribePage.jsx";
 import {AllTranscriptionsPage} from "../transcriptions/AllTranscriptionsPage.jsx";
+import {SearchPage} from "../search/SearchPage.jsx";
 
 function App() {
     const [currentPage, setCurrentPage] = useState("transcribe");
@@ -14,8 +15,9 @@ function App() {
             <button onClick={() => setCurrentPage("search")}>Search Transcriptions</button>
         </div>
         <div>
-            {currentPage === 'transcribe' && <TranscribePage />}
-            {currentPage === "all" && <AllTranscriptionsPage />}
+            {currentPage === 'transcribe' && <TranscribePage/>}
+            {currentPage === "all" && <AllTranscriptionsPage/>}
+            {currentPage === 'search' && <SearchPage/>}
         </div>
     </>)
 }

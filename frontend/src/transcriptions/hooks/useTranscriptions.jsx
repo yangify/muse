@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 
 export function useTranscriptions() {
     const [transcriptions, setTranscriptions] = useState([]);
-    const [loading, setLoading] = useState(true);
+    const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
 
     useEffect(() => {

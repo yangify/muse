@@ -11,12 +11,12 @@ from flask_cors import CORS
 from service import transcriber
 from repository import db, ts_repo
 
-api_bp = Blueprint('api_bp', __name__)
-CORS(api_bp, resources={r"/*": {"origins": "http://localhost:5173"}})
+app = Flask(__name__)
+CORS(app, resources={r"/*": {"origins": "http://localhost:5173"}})
 db.init()
 
 
-@api_bp.route('/health', methods=['GET'])
+@app.route('/health', methods=['GET'])
 def health_check():
     """
     Perform a health check.
@@ -28,7 +28,7 @@ def health_check():
     return jsonify({"status": "healthy"}), 200
 
 
-@api_bp.route('/transcribe', methods=['POST'])
+@app.route('/transcribe', methods=['POST'])
 def transcribe_files():
     """
     Transcribe one or more uploaded MP3 files.
@@ -54,7 +54,7 @@ def transcribe_files():
     return jsonify({"transcriptions": transcriptions}), 200
 
 
-@api_bp.route('/transcriptions', methods=['GET'])
+@app.route('/transcriptions', methods=['GET'])
 def get_transcriptions():
     """
     Retrieve all stored transcriptions.
@@ -67,7 +67,7 @@ def get_transcriptions():
     return jsonify({"transcriptions": transcriptions}), 200
 
 
-@api_bp.route('/search', methods=['GET'])
+@app.route('/search', methods=['GET'])
 def search_transcriptions():
     """
     Perform a full-text search on transcriptions based on the audio file name.
@@ -92,13 +92,5 @@ def search_transcriptions():
     return jsonify({"transcriptions": results}), 200
 
 
-def create_app():
-    app = Flask(__name__)
-    # Register the blueprint with /api as the prefix
-    app.register_blueprint(api_bp, url_prefix='/api')
-    return app
-
-
 if __name__ == '__main__':
-    app = create_app()
-    app.run()
+    app.run(debug=True)

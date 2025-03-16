@@ -25,7 +25,7 @@ export function TranscribePage() {
         const formData = new FormData();
         files.map((file) => formData.append('files', file));
 
-        fetch('http://127.0.0.1:5000/api/transcribe', {
+        fetch('http://127.0.0.1:5000/transcribe', {
             method: 'POST',
             body: formData,
         })

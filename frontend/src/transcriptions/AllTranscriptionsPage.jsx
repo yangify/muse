@@ -7,7 +7,7 @@ export function AllTranscriptionsPage() {
 
     useEffect(() => {
         // Fetch transcriptions from API
-        fetch("http://127.0.0.1:5000/api/transcriptions")
+        fetch("http://127.0.0.1:5000/transcriptions")
             .then((response) => {
                 if (!response.ok) {
                     throw new Error("Failed to fetch transcriptions");

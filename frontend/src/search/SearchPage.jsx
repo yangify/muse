@@ -21,7 +21,7 @@ export function SearchPage() {
 
         try {
             // Send GET request to /search endpoint
-            const response = await fetch(`http://127.0.0.1:5000/api/search?filename=${encodeURIComponent(query)}`);
+            const response = await fetch(`http://127.0.0.1:5000/search?filename=${encodeURIComponent(query)}`);
             if (!response.ok) {
                 throw new Error('Failed to fetch search results');
             }

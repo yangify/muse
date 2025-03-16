@@ -1,2 +1,3 @@
 # muse
-Music to my ears
+
+To start: `docker compose up -d --build`

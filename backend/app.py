@@ -6,13 +6,13 @@ This module provides a Flask application with four endpoints:
 3. A transcriptions endpoint (/transcriptions) to retrieve all stored transcriptions from the database.
 4. A search endpoint (/search) that performs a full-text search on transcriptions based on the audio file name.
 """
-from flask import Flask, Blueprint, request, jsonify
+from flask import Flask, request, jsonify
 from flask_cors import CORS
 from service import transcriber
 from repository import db, ts_repo
 
 app = Flask(__name__)
-CORS(app, resources={r"/*": {"origins": "http://localhost:5173"}})
+CORS(app, resources={r"/*": {"origins": "http://localhost:8080"}})
 db.init()
 
 
@@ -93,4 +93,4 @@ def search_transcriptions():
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run()

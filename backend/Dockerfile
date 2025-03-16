@@ -3,6 +3,8 @@ FROM python:3.13-slim
 
 # Copy the requirements file and install dependencies
 COPY requirements.txt .
+
+# Install required packages
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy the rest of your application code

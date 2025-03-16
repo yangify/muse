@@ -89,9 +89,6 @@ def search_transcriptions():
         print(e)
         return jsonify({"error": "Error searching transcriptions"}), 500
 
-    if not results:
-        return jsonify({"error": "No transcriptions found matching the filename"}), 404
-
     return jsonify({"transcriptions": results}), 200
 
 

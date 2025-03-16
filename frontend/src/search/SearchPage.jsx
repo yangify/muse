@@ -80,7 +80,7 @@ export function SearchPage() {
             {hasSearched && results.length === 0 && !isLoading && (
                 <div>
                     <h2>Search Results</h2>
-                    <p>No results found for the query "{query}".</p>
+                    <p>No results found for the query.</p>
                 </div>
             )}
         </div>

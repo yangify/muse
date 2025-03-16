@@ -14,4 +14,4 @@ If you are developing a production application, we recommend using TypeScript an
 
 Dockerize: ` docker build -t muse-frontend . `
 
-Run Container: ` docker run -d -p 8000:8000 --name muse-frontend muse-frontend `
+Run Container: ` docker run -d -p 8080:80 --name muse-frontend muse-frontend `

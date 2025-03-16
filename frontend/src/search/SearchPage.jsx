@@ -63,16 +63,17 @@ export function SearchPage() {
             {hasSearched && results.length > 0 && (
                 <div>
                     <h2>Search Results</h2>
-                    <ul>
+                    <div>
                         {results.map((result, index) => (
-                            <li key={index}>
+                            <div key={index}>
+                                <hr/>
                                 <strong>Filename:</strong> {result.filename}
                                 <br/>
                                 <strong>Transcription:</strong>{' '}
                                 {result.transcription || 'No transcription available'}
-                            </li>
+                            </div>
                         ))}
-                    </ul>
+                    </div>
                 </div>
             )}
 

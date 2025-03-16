@@ -10,7 +10,7 @@ export function useTranscriptionUpload() {
         selectedFiles.forEach((file) => formData.append("files", file));
 
         try {
-            const response = await fetch("http://127.0.0.1:5000/transcribe", {
+            const response = await fetch("http://localhost:8000/transcribe", {
                 method: "POST",
                 body: formData,
             });

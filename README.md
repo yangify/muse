@@ -4,7 +4,7 @@ To get a quick preview of everything, simply run :
 
 `docker compose up -d --build`
 
-# 3-Tier Architecture Overview
+# Architecture Diagram
 
 This diagram represents a 3-tier architecture, commonly used in modern applications:
 

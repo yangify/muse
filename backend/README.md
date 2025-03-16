@@ -14,7 +14,7 @@ Setup using setup script:
 
 ---
 
-Start dev server: `flask run`
+Start dev server: `flask run -h localhost -p 8000`
 
 Run test: `pytest`
 

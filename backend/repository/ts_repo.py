@@ -31,7 +31,10 @@ def save(filename, transcription):
         INSERT INTO transcriptions (
             filename, 
             transcription
-        ) VALUES (?, ?)''', (filename, transcription))
+        ) VALUES (?, ?)
+        ON CONFLICT(filename) 
+        DO UPDATE 
+        SET transcription = excluded.transcription''', (filename, transcription))
     conn.commit()
     conn.close()
 
@@ -94,5 +97,5 @@ def search_by_filename(filename):
 
 
 def unpack_transcription_rows(rows):
-    return [{"id": id, "filename": filename, "transcription": transcription, "createdTimestamp": created_at} for
-            id, filename, transcription, created_at in rows]
+    return [{"filename": filename, "transcription": transcription, "createdTimestamp": created_at} for
+            filename, transcription, created_at in rows]

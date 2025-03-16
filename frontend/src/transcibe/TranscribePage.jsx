@@ -1,8 +1,8 @@
-// TranscribeHandlers.js
-import {useRef} from 'react';
+import {useRef, useState} from 'react';
 
-// Function to handle file upload
-export const useFileUploadHandler = (setTranscriptions, setFiles) => {
+export function TranscribePage() {
+    const [files, setFiles] = useState([]);
+    const [transcriptions, setTranscriptions] = useState({});
     const fileInputRef = useRef(null);
 
     const handleFileUpload = (e) => {
@@ -13,7 +13,7 @@ export const useFileUploadHandler = (setTranscriptions, setFiles) => {
         setTranscriptions({}); // Clear existing transcriptions
 
         // Post files to the /transcribe endpoint
-        postFileToTranscribe(selectedFiles, setTranscriptions, setFiles);
+        postFileToTranscribe(selectedFiles);
 
         // Clear the input field to refresh it
         if (fileInputRef.current) {
@@ -21,43 +21,35 @@ export const useFileUploadHandler = (setTranscriptions, setFiles) => {
         }
     };
 
-    return {handleFileUpload, fileInputRef};
-};
+    const postFileToTranscribe = (files) => {
+        const formData = new FormData();
+        files.map((file) => formData.append('files', file));
 
-// Function to post files for transcription
-export const postFileToTranscribe = (files, setTranscriptions, setFiles) => {
-    const formData = new FormData();
-    files.map((file) => formData.append('files', file));
-
-    fetch('http://127.0.0.1:5000/api/transcribe', {
-        method: 'POST',
-        body: formData,
-    })
-        .then((response) => {
-            if (!response.ok) {
-                throw new Error('Failed to transcribe files');
-            }
-            return response.json();
+        fetch('http://127.0.0.1:5000/api/transcribe', {
+            method: 'POST',
+            body: formData,
         })
-        .then((body) => {
-            // Update transcriptions
-            const updatedTranscriptions = {};
-            files.forEach((file, index) => {
-                updatedTranscriptions[file.name] =
-                    body.transcriptions[index]?.transcription || 'No transcription available';
+            .then((response) => {
+                if (!response.ok) {
+                    throw new Error('Failed to transcribe files');
+                }
+                return response.json();
+            })
+            .then((body) => {
+                // Update transcriptions
+                const updatedTranscriptions = {};
+                files.forEach((file, index) => {
+                    updatedTranscriptions[file.name] =
+                        body.transcriptions[index]?.transcription || 'No transcription available';
+                });
+                setTranscriptions(updatedTranscriptions);
+            })
+            .catch(() => {
+                alert('There was an error uploading files or processing transcriptions.');
+                setFiles([]);
+                setTranscriptions({});
             });
-            setTranscriptions(updatedTranscriptions);
-        })
-        .catch(() => {
-            alert('There was an error uploading files or processing transcriptions.');
-            setFiles([]);
-            setTranscriptions({});
-        });
-};
-
-// Transcribe Page Component
-export const TranscribePage = ({files, setFiles, transcriptions, setTranscriptions}) => {
-    const {handleFileUpload, fileInputRef} = useFileUploadHandler(setTranscriptions, setFiles);
+    };
 
     return (
         <div>
@@ -69,6 +61,7 @@ export const TranscribePage = ({files, setFiles, transcriptions, setTranscriptio
                 ref={fileInputRef} // Attach the ref to the input element
                 onChange={handleFileUpload}
             />
+
             {files.length > 0 && (
                 <div>
                     <h2>Uploaded Files and Transcriptions</h2>
@@ -88,4 +81,4 @@ export const TranscribePage = ({files, setFiles, transcriptions, setTranscriptio
             )}
         </div>
     );
-};
+}

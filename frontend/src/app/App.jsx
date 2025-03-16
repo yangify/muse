@@ -4,8 +4,6 @@ import {TranscribePage} from "../transcibe/TranscribePage.jsx";
 
 function App() {
     const [currentPage, setCurrentPage] = useState("transcribe");
-    const [files, setFiles] = useState([]);
-    const [transcriptions, setTranscriptions] = useState({});
 
     return (<>
         {/* Navigation Buttons */}
@@ -15,12 +13,7 @@ function App() {
             <button onClick={() => setCurrentPage("search")}>Search Transcriptions</button>
         </div>
         <div>
-            {currentPage === 'transcribe' && (<TranscribePage
-                files={files}
-                setFiles={setFiles}
-                transcriptions={transcriptions}
-                setTranscriptions={setTranscriptions}
-            />)}
+            {currentPage === 'transcribe' && <TranscribePage />}
         </div>
     </>)
 }

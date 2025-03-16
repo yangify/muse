@@ -1,7 +1,7 @@
 import React from "react";
-import {useTranscriptionUpload} from "./useTranscriptionUpload.jsx";
-import {FileUploadInput} from "./FileUploadInput.jsx";
-import {TranscriptionList} from "./TranscriptionList.jsx";
+import {useTranscriptionUpload} from "./hooks/useTranscriptionUpload.jsx";
+import {FileUploadInput} from "./Components/FileUploadInput.jsx";
+import {TranscriptionList} from "./Components/TranscriptionList.jsx";
 
 export function TranscribePage() {
     const {files, transcriptions, error, handleFilesUpload} = useTranscriptionUpload();

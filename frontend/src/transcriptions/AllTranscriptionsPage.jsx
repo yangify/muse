@@ -1,6 +1,6 @@
 import React from "react";
-import {useTranscriptions} from "./useTranscriptions.jsx";
-import {TranscriptionList} from "./TranscriptionList";
+import {useTranscriptions} from "./hooks/useTranscriptions.jsx";
+import {TranscriptionList} from "./components/TranscriptionList.jsx";
 
 export function AllTranscriptionsPage() {
     const {transcriptions, loading, error} = useTranscriptions();
